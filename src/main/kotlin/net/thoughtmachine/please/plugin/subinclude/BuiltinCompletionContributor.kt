@@ -5,7 +5,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiManager
 import com.intellij.util.ProcessingContext
-import com.intellij.util.castSafelyTo
+import com.intellij.util.asSafely
 import com.jetbrains.python.PyTokenTypes
 import com.jetbrains.python.psi.PyFile
 import net.thoughtmachine.please.plugin.PleaseFile
@@ -32,7 +32,7 @@ class SubincludeCompletionProvider : CompletionProvider<CompletionParameters>(){
         return file.getSubincludes().asSequence()
             .map { PleaseSubincludeManager.resolvedSubincludes[it] }.filterNotNull().flatten()
             .map(PsiManager.getInstance(parameters.editor.project!!)::findFile)
-            .map { it.castSafelyTo<PyFile>() }.filterNotNull()
+            .map { it.asSafely<PyFile>() }.filterNotNull()
             .flatMap { it.iterateNames().asSequence() }
             .map { it.name }.filterNotNull()
             .filter { it.startsWith(text) }

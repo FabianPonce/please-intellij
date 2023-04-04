@@ -15,7 +15,7 @@ import com.intellij.openapi.project.IndexNotReadyException
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Computable
 import com.intellij.psi.PsiElementVisitor
-import com.intellij.util.castSafelyTo
+import com.intellij.util.asSafely
 import com.jetbrains.python.psi.PyCallExpression
 import com.jetbrains.python.psi.PyElementVisitor
 import com.jetbrains.python.psi.PyStringLiteralExpression
@@ -41,11 +41,11 @@ class UnresovledSubincludeVisitor(private val file: PleaseFile, private val hold
             return
         }
         val includes = call.arguments.asSequence()
-            .map { it.castSafelyTo<PyStringLiteralExpression>() }.filterNotNull()
+            .map { it.asSafely<PyStringLiteralExpression>() }.filterNotNull()
             .toList()
 
         includes.asSequence()
-            .map { it.castSafelyTo<PyStringLiteralExpression>() }.filterNotNull()
+            .map { it.asSafely<PyStringLiteralExpression>() }.filterNotNull()
             .forEach { expr ->
                 if(!PleaseSubincludeManager.resolvedSubincludes.containsKey(expr.stringValue)) {
                     holder.registerProblem(UnresolvedSubincludeDescriptor(file, expr, includes.map { it.stringValue }))

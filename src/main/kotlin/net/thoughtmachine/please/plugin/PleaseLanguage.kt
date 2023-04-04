@@ -7,7 +7,7 @@ import com.intellij.openapi.util.IconLoader
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
-import com.intellij.util.castSafelyTo
+import com.intellij.util.asSafely
 import com.jetbrains.python.PyTokenTypes
 import com.jetbrains.python.debugger.PySignature.NamedParameter
 import com.jetbrains.python.inspections.PyInspectionExtension
@@ -128,11 +128,11 @@ class PleaseFile(viewProvider: FileViewProvider, private var type : PleaseFileTy
                 return
             }
             val includes = call.arguments.asSequence()
-                .map { it.castSafelyTo<PyStringLiteralExpression>() }.filterNotNull()
+                .map { it.asSafely<PyStringLiteralExpression>() }.filterNotNull()
                 .toList()
 
             includes.asSequence()
-                .map { it.castSafelyTo<PyStringLiteralExpression>() }.filterNotNull()
+                .map { it.asSafely<PyStringLiteralExpression>() }.filterNotNull()
                 .forEach { expr ->
                     file.subincludes!!.add(expr.stringValue)
                 }
@@ -180,13 +180,13 @@ data class PsiTarget(val name : String, val element: PyCallExpression) : PsiElem
         val srcsExpr = element.getKeywordArgument("srcs") ?: return emptyList()
         if (srcsExpr is PyListLiteralExpression) {
             return srcsExpr.elements
-                .mapNotNull { it.castSafelyTo<PyStringLiteralExpression>() }
+                .mapNotNull { it.asSafely<PyStringLiteralExpression>() }
                 .map { it.stringValue }
         } else if (srcsExpr is PyDictLiteralExpressionImpl) {
             return srcsExpr.elements
-                .mapNotNull { it.castSafelyTo<PyListLiteralExpression>() }
+                .mapNotNull { it.asSafely<PyListLiteralExpression>() }
                 .flatMap { it.elements.toList() }
-                .mapNotNull { it.castSafelyTo<PyStringLiteralExpression>()}
+                .mapNotNull { it.asSafely<PyStringLiteralExpression>()}
                 .map { it.stringValue }
         }
         return emptyList()

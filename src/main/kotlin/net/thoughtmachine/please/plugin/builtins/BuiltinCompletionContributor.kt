@@ -5,7 +5,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiManager
 import com.intellij.util.ProcessingContext
-import com.intellij.util.castSafelyTo
+import com.intellij.util.asSafely
 import com.jetbrains.python.PyTokenTypes
 import com.jetbrains.python.psi.PyFile
 
@@ -25,7 +25,7 @@ class BuiltinCompletionProvider : CompletionProvider<CompletionParameters>(){
 
         return PleaseBuiltins.PLEASE_BUILTINS.asSequence()
             .map(PsiManager.getInstance(parameters.editor.project!!)::findFile)
-            .map { it.castSafelyTo<PyFile>() }
+            .map { it.asSafely<PyFile>() }
             .filterNotNull()
             .flatMap { it.iterateNames().asSequence() }
             .map { it.name }.filterNotNull()

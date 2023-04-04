@@ -2,7 +2,7 @@ package net.thoughtmachine.please.plugin.subinclude
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
-import com.intellij.util.castSafelyTo
+import com.intellij.util.asSafely
 import com.jetbrains.python.psi.PyFile
 import com.jetbrains.python.psi.PyQualifiedExpression
 import com.jetbrains.python.psi.resolve.PyReferenceResolveProvider
@@ -30,7 +30,7 @@ object SubincludeReferenceResolveProvider : PyReferenceResolveProvider {
             .map { PleaseSubincludeManager.resolvedSubincludes[it]?.asSequence() }
             .filterNotNull().flatten()
             .map(PsiManager.getInstance(file.project)::findFile).filterNotNull()
-            .map { it.castSafelyTo<PyFile>()?.findExportedName(name) }.filterNotNull()
+            .map { it.asSafely<PyFile>()?.findExportedName(name) }.filterNotNull()
             .toList()
     }
 }

@@ -1,7 +1,7 @@
 package net.thoughtmachine.please.plugin.builtins
 
 import com.intellij.psi.PsiManager
-import com.intellij.util.castSafelyTo
+import com.intellij.util.asSafely
 import com.jetbrains.python.psi.PyFile
 import com.jetbrains.python.psi.PyQualifiedExpression
 import com.jetbrains.python.psi.resolve.PyReferenceResolveProvider
@@ -18,7 +18,7 @@ class BuiltinReferenceResolveProvider : PyReferenceResolveProvider {
 
         return PleaseBuiltins.PLEASE_BUILTINS.asSequence()
             .map(PsiManager.getInstance(expression.project)::findFile)
-            .map { it.castSafelyTo<PyFile>() }
+            .map { it.asSafely<PyFile>() }
             .filterNotNull()
             .map { it.findExportedName(expression.name) }
             .filterNotNull()

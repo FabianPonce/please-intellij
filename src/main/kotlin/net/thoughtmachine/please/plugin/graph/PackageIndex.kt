@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiUtilCore
-import com.intellij.util.castSafelyTo
+import com.intellij.util.asSafely
 import com.intellij.util.indexing.*
 import com.intellij.util.io.KeyDescriptor
 import net.thoughtmachine.please.plugin.PleaseBuildFileType
@@ -88,7 +88,7 @@ object PackageIndexer : DataIndexer<Pair<String, String>, Void, FileContent> {
     fun lookup(project: Project, pleaseRepo: String, pkg: String) : PleaseFile? {
         return FileBasedIndex.getInstance()
             .getContainingFiles(PackageIndexExtension.name, Pair(pleaseRepo, pkg), GlobalSearchScope.projectScope(project))
-            .firstNotNullOfOrNull { PsiUtilCore.getPsiFile(project, it).castSafelyTo<PleaseFile>() }
+            .firstNotNullOfOrNull { PsiUtilCore.getPsiFile(project, it).asSafely<PleaseFile>() }
     }
 }
 
